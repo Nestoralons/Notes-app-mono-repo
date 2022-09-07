@@ -28,11 +28,15 @@ app.use(logger);
 app.use(express.static("../app/build"));
 app.get("/api/notes", async (request, response) => {
   // response.json(notes);
-  const notes = await Note.find({}).populate("user", {
-    username: 1,
-    name: 1,
-  });
-  response.json(notes);
+  try {
+    const notes = await Note.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
+    response.json(notes);
+  } catch (error) {
+    console.error(error);
+  }
   // Note.find({}).then((result) => {
   //   response.json(result);
   // });
@@ -124,7 +128,7 @@ app.use("/api/login", loginRouter);
 app.use(notFound);
 
 app.use(handleErrors);
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 const server = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
